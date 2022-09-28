@@ -1,5 +1,6 @@
 const cors = require('cors');
 const express = require('express');
+const Database = require('better-sqlite3');
 const path = require('path');
 
 // create and config server
@@ -13,8 +14,15 @@ app.listen(serverPort, () => {
   console.log(`Server listening at port: ${serverPort}`);
 });
 
+
+const db = new Database('./src/data/users.db', { verbose: console.log });
+
 app.get('/user', (req, res) => {
   console.log('Han llamado al endpoint /user');
+
+  const query = db.prepare(`SELECT * FROM users`);
+  const allUsers = query.all();
+  console.log(allUsers);
 
   res.json({
     success: true,
